@@ -1,0 +1,17 @@
+{
+    "name": "my/collections",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "My\\Collections\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "i.panov",
+            "email": "panov210@yandex.ru"
+        }
+    ],
+    "require": {}
+}

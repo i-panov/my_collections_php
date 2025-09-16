@@ -5,16 +5,17 @@ namespace My\Collections\Impl;
 use My\Collections\Interfaces\ISet;
 use My\Collections\Interfaces\IValueChecker;
 use My\Collections\Interfaces\IValueKeyGenerator;
+use My\Collections\Traits\AddAllTrait;
 
-class ArraySet implements ISet
+class ArraySet extends BaseCollection implements ISet
 {
-    private array $items = [];
-    private ?IValueChecker $valueChecker;
+    use AddAllTrait;
+
     private IValueKeyGenerator $valueKeyGenerator;
 
     public function __construct(?IValueChecker $valueChecker = null, ?IValueKeyGenerator $valueKeyGenerator = null)
     {
-        $this->valueChecker = $valueChecker;
+        parent::__construct($valueChecker);
         $this->valueKeyGenerator = $valueKeyGenerator ?? new ValueKeyGenerator();
     }
 
@@ -28,27 +29,9 @@ class ArraySet implements ISet
         }
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function count(): int
-    {
-        return count($this->items);
-    }
-
-    public function isEmpty(): bool
-    {
-        return empty($this->items);
-    }
-
     public function add($item): bool
     {
-        if ($this->valueChecker) {
-            if ($e = $this->valueChecker->check($item)) {
-                throw $e;
-            }
-        }
-
+        $this->checkValue($item);
         $key = $this->valueKeyGenerator->generateKey($item);
 
         if (!isset($this->items[$key])) {
@@ -59,29 +42,12 @@ class ArraySet implements ISet
         return false;
     }
 
-    public function addAll(iterable $items): void
-    {
-        foreach ($items as $item) {
-            $this->add($item);
-        }
-    }
-
     public function remove($item): bool
     {
         $key = $this->valueKeyGenerator->generateKey($item);
 
         if (isset($this->items[$key])) {
             unset($this->items[$key]);
-            return true;
-        }
-
-        return false;
-    }
-
-    public function clear(): bool
-    {
-        if ($this->items) {
-            $this->items = [];
             return true;
         }
 

@@ -4,7 +4,7 @@ namespace My\Collections\Interfaces;
 
 interface IList extends ICollection, IMutableCollection, \ArrayAccess
 {
-    public function find($item): int;
+    public function find($item): int; // todo: offset, length
 
     public function findBy(callable $callback): int;
 
